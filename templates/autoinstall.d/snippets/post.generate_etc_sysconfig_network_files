@@ -22,6 +22,12 @@ f=$confdir/ifcfg-{{ ni.device }}
 bf=/root/setup/$f.save
 test -f $bf || cp $f $bf
 hwaddr_line=$(grep -E ^HWADDR $f)
+if [ -z "${hwaddr_line}" ]; then
+  hwaddr_line=$(ip -o link show dev {{ ni.device }} | sed -e 's@.*link/ether \([0-9a-f:]*\) .*@\1@')
+  if [ -n "${hwaddr_line}" ]; then
+    hwaddr_line="HWADDR=${hwaddr_line}"
+  fi
+fi
 cat << EOF > $f
 NAME={{ ni.altname if ni.altname else ni.device }}
 DEVICE={{ ni.altname if ni.altname else ni.device }}
