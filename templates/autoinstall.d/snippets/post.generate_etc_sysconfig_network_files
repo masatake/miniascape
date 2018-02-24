@@ -23,8 +23,8 @@ bf=/root/setup/$f.save
 test -f $bf || cp $f $bf
 hwaddr_line=$(grep -E ^HWADDR $f)
 cat << EOF > $f
-NAME={{ ni.device }}
-DEVICE={{ ni.device }}
+NAME={{ ni.altname if ni.altname else ni.device }}
+DEVICE={{ ni.altname if ni.altname else ni.device }}
 ${hwaddr_line}
 TYPE={{ ni.type|default('Ethernet') }}
 IPADDR={{ ni.ip }} 
